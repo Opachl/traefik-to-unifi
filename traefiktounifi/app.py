@@ -1,6 +1,7 @@
 import os
 import requests
 import re
+import fnmatch
 
 def sync():
     traefik_ip = os.environ.get("TRAEFIK_IP")
@@ -10,6 +11,7 @@ def sync():
     unifi_password = os.environ.get("UNIFI_PASSWORD")
     ignore_ssl_warnings = os.environ.get("IGNORE_SSL_WARNINGS")
     allow_dns_delete = os.environ.get("ALLOW_DNS_DELETE")
+    dns_delete_domain = os.environ.get("DNS_DELETE_DOMAIN")
 
     if None in [traefik_ip, traefik_api_url, unifi_url, unifi_username, unifi_password]:
         raise ValueError("One or more required environment variables are not set.")
@@ -64,7 +66,11 @@ def sync():
 
     for entry in unifi_static_dns_entries:
         if entry not in traefik_domains:
-            entries_to_delete.append(unifi_static_dns_entries[entry][1])
+            if fnmatch.fnmatch(entry, dns_delete_domain):
+                print(f"Entry {entry} matches {dns_delete_domain} and is marked for deletion.")
+                entries_to_delete.append(unifi_static_dns_entries[entry][1])
+            else:
+                print(f"Entry {entry} does not match {dns_delete_domain} and is skipped.")
 
     for entry in entries_to_update:
         update_response = unifi_session.put(
