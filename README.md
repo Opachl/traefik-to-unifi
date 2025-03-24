@@ -11,10 +11,13 @@ This project aims to integrate Traefik with UniFi, allowing for routes populated
 3. Set up the necessary environment variables:
 
 - `UNIFI_URL`: The URL of the UniFi controller
+- `IGNORE_SSL_WARNINGS`: true/false iggore ssl warnings from UniFi controller
 - `UNIFI_USERNAME`: The username for accessing the UniFi controller
 - `UNIFI_PASSWORD`: The password for accessing the UniFi controller
 - `TRAEFIK_API_URL`: The URL of the Traefik reverse proxy API
 - `TRAEFIK_IP`: The IP of the Traefik reverse proxy API
+- `ALLOW_DNS_DELETE`: true/false if true it will use the variable DNS_DELETE_DOMAIN to remove all obsolete entrys
+- `DNS_DELETE_DOMAIN`: eg. *.myDomain.com will be used for ALLOW_DNS_DELETE wildcard is used to specify wich entrys should be cleaned if not provided by traefik.
 
 ## Usage
 
